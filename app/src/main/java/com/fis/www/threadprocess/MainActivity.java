@@ -46,25 +46,20 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    //button Click
     public void StartUpdate(View view){
         final Handler handler = new Handler();
-
-
         Thread thread = new Thread(new Runnable() {
             @Override
             //客製Thread
-
             public void run() {
                 do {
                     handler.post(new Runnable(){
                         @Override
                            public void run(){
                             tvMessage.setText(new Date().toString()); //抓系統時間顯示在tvMessage
-
                         }
-
                     });
-
                     try {
                         Thread.sleep(1000); //以1000為單位
                     }
@@ -75,7 +70,5 @@ public class MainActivity extends ActionBarActivity {
             }
         });
         thread.start();
-
-
     }
 }
