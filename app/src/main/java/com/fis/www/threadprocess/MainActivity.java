@@ -2,7 +2,9 @@ package com.fis.www.threadprocess;
 //Handler 若選到Utitly 會產生錯誤
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -23,6 +25,7 @@ public class MainActivity extends ActionBarActivity {
     TextView tvMessage2;
     Button StartButton;
     Button NotifyButton; //通知畫面
+    Button NotifyBack; //
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +49,23 @@ public class MainActivity extends ActionBarActivity {
                 final int notifyId=1;
                 final NotificationManager manager= (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
                 final Notification notification = new Notification.Builder(getApplicationContext()).setSmallIcon(R.drawable.ic_action_copy).setContentTitle("FIS TEST").setContentText("Test Abby.").build();
+                manager.notify(notifyId,notification);
+            }
+        });
+
+        NotifyBack = (Button)findViewById(R.id.NotifyBack);
+        NotifyBack.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                final int notifyId=1;
+                final int requestCode=notifyId;
+                final Intent intent = getIntent();//不同程式之間會進行程式的切換
+                //alt + enter =>import 元件
+                final int flags = PendingIntent.FLAG_CANCEL_CURRENT;
+                final PendingIntent  pendingIntent = PendingIntent.getActivity(getApplicationContext(),requestCode,intent, flags);
+
+                final NotificationManager manager= (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+                final Notification notification = new Notification.Builder(getApplicationContext()).setSmallIcon(R.drawable.ic_action_copy).setContentTitle("FIS TEST").setContentText("Test back.").setContentIntent(pendingIntent).build();
                 manager.notify(notifyId,notification);
             }
         });
