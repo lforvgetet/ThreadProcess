@@ -1,11 +1,13 @@
 package com.fis.www.threadprocess;
 //Handler 若選到Utitly 會產生錯誤
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.Date;
@@ -15,13 +17,24 @@ import java.util.Date;
 public class MainActivity extends ActionBarActivity {
 
     TextView tvMessage; //視狀況決定命名位置
+    TextView tvMessage2;
+    Button StartButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        tvMessage= (TextView)findViewById(R.id.tvMessage);
 
+        tvMessage= (TextView)findViewById(R.id.tvMessage);
+        tvMessage2=(TextView)findViewById(R.id.tvMessage2);
+        StartButton =(Button)findViewById(R.id.StartButton);
+        StartButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+        public void onClick(View v){
+                new PostTask().execute("http://video.test.com");  //輸入下載的URL
+            }
+
+        });
     }
 
 
@@ -71,4 +84,39 @@ public class MainActivity extends ActionBarActivity {
         });
         thread.start();
     }
+    private class PostTask  extends AsyncTask<String, Integer, String>{
+        protected String doInBackground(String... params)
+        {
+            String url= params[0];
+            for(int i = 0 ; i<=100; i+=5)
+            {
+                try
+                {
+                    Thread.sleep(500);
+                }
+                catch(InterruptedException ex)
+                {
+                    ex.printStackTrace();
+                }
+                publishProgress(i);
+            }
+            return "finished";
+        }
+        protected void onPreExecute()
+        {
+         super.onPreExecute();
+            tvMessage2.setText("Download....");
+        }
+        protected void onProgressUpdate(Integer... values)
+        {
+        super.onProgressUpdate(values);
+           tvMessage2.setText("Downloading..." +values[0] + "%");
+
+        }
+        protected void onPostExecute(String result){
+            super.onPostExecute(result);
+            tvMessage2.setText("Download finished");
+        }
+    }
+
 }
