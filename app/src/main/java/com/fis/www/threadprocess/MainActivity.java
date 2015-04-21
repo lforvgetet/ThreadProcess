@@ -1,5 +1,8 @@
 package com.fis.www.threadprocess;
 //Handler 若選到Utitly 會產生錯誤
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -19,7 +22,7 @@ public class MainActivity extends ActionBarActivity {
     TextView tvMessage; //視狀況決定命名位置
     TextView tvMessage2;
     Button StartButton;
-
+    Button NotifyButton; //通知畫面
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +37,17 @@ public class MainActivity extends ActionBarActivity {
                 new PostTask().execute("http://video.test.com");  //輸入下載的URL
             }
 
+        });
+        //通知訊息
+        NotifyButton = (Button)findViewById(R.id.NotifyButton);
+        NotifyButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+                public void onClick(View v){
+                final int notifyId=1;
+                final NotificationManager manager= (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+                final Notification notification = new Notification.Builder(getApplicationContext()).setSmallIcon(R.drawable.ic_action_copy).setContentTitle("FIS TEST").setContentText("Test Abby.").build();
+                manager.notify(notifyId,notification);
+            }
         });
     }
 
@@ -84,10 +98,11 @@ public class MainActivity extends ActionBarActivity {
         });
         thread.start();
     }
+    //進度條
     private class PostTask  extends AsyncTask<String, Integer, String>{
         protected String doInBackground(String... params)
         {
-            
+
             String url= params[0];
             for(int i = 0 ; i<=100; i+=5)
             {
